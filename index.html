@@ -1,100 +1,17 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fc">
-  <meta name="description" content="发现手游折扣、专属优惠与玩法介绍。Discover mobile game deals, exclusive offers and gameplay guides.">
-  <title>PlayPerks — 手游折扣中心</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
-  <script src="./app.js" defer></script>
-</head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f6f5f0"><meta name="description" content="发现值得体验的热门手游、实用攻略与限时福利。"><title>游享 · 游戏福利指南</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="./styles.css"><script src="./app.js" defer></script></head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="./" aria-label="PlayPerks home"><span class="brand-mark">P</span><span>Play<span class="brand-accent">Perks</span></span></a>
-    <nav class="top-nav" aria-label="Main navigation">
-      <a href="#games" data-i18n="navGames">游戏优惠</a>
-      <a href="#about" data-i18n="navAbout">关于本站</a>
-    </nav>
-    <div class="header-actions">
-      <button class="language-toggle" id="languageToggle" type="button" aria-label="Switch language">EN</button>
-      <button class="button button-outline button-small" id="adminOpen" type="button" data-i18n="adminLogin">管理员登录</button>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero wrap">
-      <div class="hero-copy">
-        <span class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="eyebrow">你的下一款心头好</span></span>
-        <h1 data-i18n="heroTitle">好游戏，<span class="text-accent">好折扣。</span></h1>
-        <p class="hero-description" data-i18n="heroDescription">发现精选手游优惠、专属推广活动与实用玩法介绍。轻松找到适合你的下一场冒险。</p>
-        <a class="button button-primary" href="#games"><span data-i18n="browseDeals">浏览游戏优惠</span><span aria-hidden="true">↗</span></a>
-        <div class="hero-note"><span class="shield-icon">✓</span><span data-i18n="disclosure">优惠详情以游戏官方及活动页面为准</span></div>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
-        <div class="art-card art-card-back"><span class="art-symbol">✦</span><span class="art-lines"></span></div>
-        <div class="art-card art-card-front"><span class="art-tag">GAME DEALS</span><span class="art-star">✦</span><span class="art-caption">PLAY MORE.<br>PAY LESS.</span><span class="art-mini">✧ &nbsp; ✦ &nbsp; ✧</span></div>
-        <span class="float-bubble bubble-one">%</span><span class="float-bubble bubble-two">✧</span>
-      </div>
-    </section>
-
-    <section class="stats-strip wrap" aria-label="Site benefits">
-      <div class="stat"><span class="stat-icon">✦</span><div><strong data-i18n="statOneTitle">精选游戏</strong><span data-i18n="statOneSub">Curated games</span></div></div>
-      <div class="stat"><span class="stat-icon">％</span><div><strong data-i18n="statTwoTitle">优惠一站看</strong><span data-i18n="statTwoSub">Offers in one place</span></div></div>
-      <div class="stat"><span class="stat-icon">↗</span><div><strong data-i18n="statThreeTitle">直达活动页</strong><span data-i18n="statThreeSub">Direct offer links</span></div></div>
-    </section>
-
-    <section class="games-section wrap" id="games">
-      <div class="section-heading">
-        <div><span class="section-kicker" data-i18n="collectionKicker">THE COLLECTION</span><h2 data-i18n="gamesTitle">游戏优惠</h2><p data-i18n="gamesSubtitle">浏览游戏介绍，找到适合自己的活动。</p></div>
-        <div class="game-tools"><label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="搜索游戏名称…"><kbd>⌘ K</kbd></label></div>
-      </div>
-      <div class="filters" id="filters" aria-label="Game categories"></div>
-      <div class="results-line"><span id="resultsCount">0</span><span data-i18n="resultsLabel">款游戏</span><span class="results-spacer"></span><span class="updated-label" data-i18n="liveLabel">优惠信息以详情页为准</span></div>
-      <div class="games-grid" id="gamesGrid" aria-live="polite"></div>
-      <div class="empty-state" id="emptyState" hidden><div class="empty-icon">✧</div><h3 data-i18n="emptyTitle">游戏正在准备中</h3><p data-i18n="emptyDescription">请稍后再来看看，或使用搜索框查找其他游戏。</p></div>
-      <div class="empty-state" id="noResults" hidden><div class="empty-icon">⌕</div><h3 data-i18n="noResultsTitle">没有找到匹配的游戏</h3><p data-i18n="noResultsDescription">试试其他关键词或切换分类。</p></div>
-    </section>
-
-    <section class="about-section" id="about"><div class="wrap about-inner"><div class="about-mark">P.</div><div><span class="section-kicker" data-i18n="aboutKicker">ABOUT PLAYPERKS</span><h2 data-i18n="aboutTitle">让寻找游戏优惠更简单</h2><p data-i18n="aboutDescription">我们整理游戏介绍与活动入口，帮助玩家快速了解游戏和优惠信息。部分链接可能是推广链接；当你通过这些链接访问或购买时，本站运营者可能获得佣金，你的价格通常不会因此增加。</p></div></div></section>
-  </main>
-
-  <footer class="site-footer wrap"><a class="brand footer-brand" href="./"><span class="brand-mark">P</span><span>Play<span class="brand-accent">Perks</span></span></a><span data-i18n="footerText">独立游戏优惠导航 · 优惠规则以官方页面为准</span><a href="#about" data-i18n="footerAbout">推广说明</a></footer>
-
-  <div class="modal-backdrop" id="adminModal" hidden>
-    <section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
-      <button class="modal-close" id="adminClose" type="button" aria-label="Close">×</button>
-      <div id="loginView">
-        <span class="section-kicker">PLAYPERKS CMS</span><h2 id="adminTitle" data-i18n="adminTitle">管理游戏</h2><p class="form-intro" data-i18n="adminIntro">登录后可以添加、编辑、下架或删除游戏。</p>
-        <form id="loginForm" class="stack-form"><label><span data-i18n="passwordLabel">管理员密码</span><input id="adminPassword" type="password" autocomplete="current-password" required minlength="12"></label><button class="button button-primary full-width" type="submit" data-i18n="loginButton">安全登录</button><p class="form-message" id="loginMessage" role="status"></p></form>
-        <p class="security-note" data-i18n="securityNote">首次使用前，请在 Cloudflare Pages 中设置管理员密码和会话密钥。</p>
-      </div>
-      <div id="dashboardView" hidden>
-        <span class="section-kicker">PLAYPERKS CMS</span><div class="dashboard-title"><h2 data-i18n="dashboardTitle">游戏管理</h2><button class="button button-outline button-small" id="logoutButton" type="button" data-i18n="logout">退出登录</button></div>
-        <p class="form-intro" data-i18n="dashboardIntro">内容保存后会立即更新网站；GitHub/Cloudflare 部署无需重新构建。</p>
-        <div class="admin-game-list" id="adminGameList"></div>
-        <div class="form-divider"></div><h3 id="editorTitle" data-i18n="addGame">添加游戏</h3>
-        <form id="gameForm" class="stack-form">
-          <input id="gameId" type="hidden">
-          <div class="form-row"><label><span data-i18n="nameZh">游戏名称（中文）*</span><input id="nameZh" required maxlength="100"></label><label><span data-i18n="nameEn">游戏名称（英文）*</span><input id="nameEn" required maxlength="100"></label></div>
-          <div class="form-row"><label><span data-i18n="category">分类*</span><input id="category" required maxlength="60" placeholder="RPG / RPG"></label><label><span data-i18n="platform">平台</span><input id="platform" maxlength="100" placeholder="iOS, Android, PC"></label></div>
-          <label><span data-i18n="discount">折扣标题*</span><input id="discount" required maxlength="120" placeholder="新用户专属优惠 / New player offer"></label>
-          <label><span data-i18n="summaryZh">游戏简介（中文）*</span><textarea id="summaryZh" required maxlength="500" rows="2"></textarea></label>
-          <label><span data-i18n="summaryEn">游戏简介（英文）*</span><textarea id="summaryEn" required maxlength="500" rows="2"></textarea></label>
-          <label><span data-i18n="gameplayZh">玩法介绍（中文）</span><textarea id="gameplayZh" maxlength="2000" rows="3"></textarea></label>
-          <label><span data-i18n="gameplayEn">玩法介绍（英文）</span><textarea id="gameplayEn" maxlength="2000" rows="3"></textarea></label>
-          <label><span data-i18n="terms">折扣规则 / 注意事项</span><textarea id="terms" maxlength="1500" rows="2"></textarea></label>
-          <label><span data-i18n="imageUrl">游戏封面图片 URL（可选）</span><input id="imageUrl" type="url" placeholder="https://..."></label>
-          <label><span data-i18n="promoUrl">CPS 推广链接*</span><input id="promoUrl" type="url" required placeholder="https://..."></label>
-          <div class="form-row checkbox-row"><label class="check-label"><input id="featured" type="checkbox"><span data-i18n="featured">设为精选</span></label><label class="check-label"><input id="active" type="checkbox" checked><span data-i18n="active">公开显示</span></label></div>
-          <div class="form-actions"><button class="button button-outline" id="resetForm" type="button" data-i18n="cancelEdit">清空表单</button><button class="button button-primary" type="submit" data-i18n="saveGame">保存游戏</button></div><p class="form-message" id="gameMessage" role="status"></p>
-        </form>
-      </div>
-    </section>
-  </div>
-</body>
-</html>
+<header class="header"><a class="logo" href="#"><span class="logo-icon">游</span><span>游享<span class="dot">.</span></span></a><nav><a href="#discover">发现游戏</a><a href="#guide">福利指南</a></nav><div class="head-right"><span class="status"><i></i> 每周发现新乐趣</span><button class="admin-trigger" id="adminOpen">管理入口 ↗</button></div></header>
+<main>
+<section class="hero"><div class="hero-copy"><span class="eyebrow">✦ 给热爱游戏的你</span><h1>好玩的游戏，<br><em>值得的福利。</em></h1><p>热门手游、实用玩法与活动信息，一站轻松了解。找到下一款心动之作，也别错过正在进行的精彩活动。</p><div class="hero-actions"><a class="primary" href="#discover">探索游戏 <b>↓</b></a><span class="hint">✓ 精选信息 · 一目了然</span></div><div class="hero-social"><span class="faces"><i>游</i><i>玩</i><i>乐</i></span>为每一次游戏体验，<b>多一点灵感</b></div></div>
+<div class="hero-art"><div class="glow"></div><div class="orbit orbit1"></div><div class="orbit orbit2"></div><div class="art art-back"><div class="sun"></div><div class="mount m1"></div><div class="mount m2"></div><span class="vertical">ADVENTURE</span></div><div class="art art-front"><div class="orb">✦</div><div class="art-lines"><i></i><i></i><i></i></div><b class="art-no">01</b></div><div class="float-chip chip1">限时活动 <b>↗</b></div><div class="float-chip chip2">✳ 新鲜发现</div><div class="art-caption"><small>精选推荐</small><b>把好游戏加入收藏夹</b></div></div><div class="hero-index">01 ━━━ 03</div></section>
+<section class="quick"><div><span class="qicon orange">✦</span><p><b>精选游戏</b><small>认真整理，少走弯路</small></p></div><div><span class="qicon green">↗</span><p><b>活动速览</b><small>快速了解福利内容</small></p></div><div><span class="qicon purple">⌘</span><p><b>玩法指南</b><small>上手前先了解重点</small></p></div></section>
+<section class="discover wrap" id="discover"><div class="section-head"><div><small class="overline">发现你的下一款游戏</small><h2>游戏精选<span class="dot">.</span></h2><p>按兴趣探索，看看最近有哪些值得关注的游戏。</p></div><label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="搜索游戏名称或关键词" aria-label="搜索游戏"><kbd>⌕</kbd></label></div><div class="filter-line"><div id="filters" class="filters"><button class="filter active" data-category="全部">全部游戏</button></div><span class="count">共 <b id="resultsCount">0</b> 款</span></div><div class="game-grid" id="gamesGrid" aria-live="polite"></div><div class="empty" id="emptyState" hidden><b>✳</b><h3>精彩内容正在整理中</h3><p>稍后再来看看，新的游戏推荐即将上线。</p></div><div class="empty" id="noResults" hidden><b>⌕</b><h3>没有找到相关游戏</h3><p>换个关键词试试看，或选择其他分类。</p></div></section>
+<section class="guide" id="guide"><div class="guide-inner wrap"><div class="stamp">游<br>享</div><div><small class="overline">小小提示 · 玩得更安心</small><h2>看清活动规则，<br>再开启你的冒险。</h2><p>不同游戏的活动时间、参与条件和适用地区可能有所不同。进入活动页面前，建议先确认具体规则，让每一份期待都更有把握。</p></div><a class="guide-link" href="#discover">查看游戏 <b>↗</b></a><span class="guide-star">✳</span></div></section>
+</main>
+<footer class="footer wrap"><a class="logo" href="#"><span class="logo-icon">游</span><span>游享<span class="dot">.</span></span></a><p>发现乐趣，也了解规则。</p><div class="footer-links"><a href="#discover">游戏精选</a><a href="#guide">福利指南</a><button id="footerAdmin">管理入口</button></div><small>游戏名称及相关素材归其各自权利人所有。部分活动链接可能来自推广合作；具体活动内容、资格与规则请以跳转页面为准。</small><small>© <span id="year"></span> 游享 · 保留所有权利</small></footer>
+<div class="backdrop" id="detailModal" hidden><section class="panel detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><button class="close" data-close="detailModal" aria-label="关闭">×</button><div id="detailContent"></div></section></div>
+<div class="backdrop" id="adminModal" hidden><section class="panel admin-panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle"><button class="close" data-close="adminModal" aria-label="关闭">×</button>
+<div id="loginView"><small class="overline">内容管理</small><h2 id="adminTitle">管理员登录</h2><p class="intro">登录后可管理网站展示的游戏内容。</p><form id="loginForm" class="form"><label>管理员密码<input id="adminPassword" type="password" autocomplete="current-password" required minlength="12" placeholder="请输入管理员密码"></label><button class="primary wide" type="submit">登录后台 <b>→</b></button><p id="loginMessage" class="message"></p></form><p class="security">请先在 Cloudflare Pages 中设置管理员密码与会话密钥。</p></div>
+<div id="dashboardView" hidden><small class="overline">内容管理</small><div class="dashboard-head"><div><h2>游戏管理</h2><p class="intro">管理展示内容，保存后自动更新。</p></div><button class="secondary" id="logoutButton">退出登录</button></div><div class="admin-list" id="adminGameList"></div><div class="editor-head"><h3 id="editorTitle">添加游戏</h3><small>带 * 为必填项</small></div><form id="gameForm" class="form"><input id="gameId" type="hidden"><div class="form-grid"><label>游戏名称 *<input id="nameZh" required maxlength="100" placeholder="例如：星际远征"></label><label>游戏分类 *<input id="category" required maxlength="60" placeholder="角色扮演、策略、休闲"></label></div><div class="form-grid"><label>游戏平台<input id="platform" maxlength="100" placeholder="iOS、Android 等"></label><label>福利标题 *<input id="discount" required maxlength="120" placeholder="例如：新玩家专属福利"></label></div><label>游戏简介 *<textarea id="summaryZh" required maxlength="500" rows="3" placeholder="用几句话介绍游戏特色"></textarea></label><label>玩法介绍<textarea id="gameplayZh" maxlength="2000" rows="4" placeholder="介绍核心玩法、上手建议等"></textarea></label><label>活动规则与注意事项<textarea id="terms" maxlength="1500" rows="3" placeholder="活动期限、参与条件、适用地区等"></textarea></label><label>游戏封面图片地址<input id="imageUrl" type="url" placeholder="https://...（可选）"></label><label>活动页面链接 *<input id="promoUrl" type="url" required placeholder="https://..."></label><div class="checks"><label><input id="featured" type="checkbox">设为精选推荐</label><label><input id="active" type="checkbox" checked>在网站公开显示</label></div><div class="form-buttons"><button class="secondary" id="resetForm" type="button">清空表单</button><button class="primary" type="submit">保存内容 <b>→</b></button></div><p id="gameMessage" class="message"></p></form></div></section></div>
+</body></html>
