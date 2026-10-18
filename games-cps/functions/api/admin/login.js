@@ -8,6 +8,6 @@ export async function onRequestPost({request,env}) {
    return json({error:"Invalid credentials"},401);
   }
   const token=await issueSession(env.SESSION_SECRET);
-  return json({ok:true},{status:200,headers:{"Set-Cookie":sessionCookie(token,request),"Cache-Control":"no-store"}});
+  return json({ok:true},200,{"Set-Cookie":sessionCookie(token,request),"Cache-Control":"no-store"});
  } catch {return json({error:"Invalid request"},400);}
 }
