@@ -1,51 +1,29 @@
-# PlayPerks — 手游 CPS 折扣推广网站
+# 游享 · 游戏福利指南
 
-A bilingual Chinese/English mobile-game offer directory, designed for Cloudflare Pages Functions + D1.
+中文手游发现与活动信息网站，使用 Cloudflare Pages Functions 和 D1 数据库。
 
-## What is included
+## 功能
+- 全中文界面，适配手机与电脑
+- 游戏分类、关键词搜索、详情、玩法介绍与活动规则
+- 管理员登录，后台添加、编辑、公开展示、下架与删除游戏
+- 内容保存在 Cloudflare D1，修改后无需重新构建静态页面
 
-- Responsive light UI, Chinese/English toggle, category filters and search
-- Game detail dialog with summary, gameplay, offer terms and CPS link
-- Admin login, add/edit/unpublish/delete game workflows
-- Cloudflare Pages Functions API and D1 persistence
-- Empty initial catalog: add only real games and valid offer links you control
+## Cloudflare 配置
+网站文件位于仓库根目录，Pages 的 Root directory 使用默认根目录即可。无需 npm 构建命令，Build output directory 可设为 `.`。
 
-## Important: this is a sub-project
+1. 在 Cloudflare D1 创建数据库。
+2. 在 D1 控制台执行本仓库的 `schema.sql`。若已初始化过同一张表，无需重复创建。
+3. 在 Pages 项目中添加 D1 binding，变量名填写 `DB`，选择刚创建的数据库。
+4. 在 Pages 的 Variables and Secrets 中添加两个 Secret：
+   - `ADMIN_PASSWORD`：独立且足够长的管理员密码。
+   - `SESSION_SECRET`：独立随机会话密钥，建议至少 32 个字符。
+5. 保存设置并重新部署，通过网站顶部的“管理入口”登录。
 
-These files live in `games-cps/` so the existing Jerry water-bottle / WeChat demo files at the repository root remain unchanged.
+不要把管理员密码或会话密钥写进代码或提交到 GitHub。
 
-## Deploy with Cloudflare Pages
+## 添加游戏
+登录后台后填写游戏名称、分类、福利标题、简介和活动页面链接。可选填写玩法介绍、活动规则、平台及封面图片地址。只公开已核实的游戏信息和有效链接。
 
-1. Open **Workers & Pages** in Cloudflare Dashboard. Select the Pages project connected to `qinzhu0907/jerry--web` (or create a separate Pages project connected to this repository if you do not want to change the existing project's current website).
-2. In **Settings → Builds & deployments**, set **Root directory** to `games-cps`. Set the production branch to `main`. Leave the build command blank and set the build output directory to `.` (or `/ ` if the UI formats it that way). This is a plain static site plus Pages Functions, no npm build is needed.
-3. Create a D1 database in Cloudflare Dashboard → **Storage & databases → D1 SQL database**, for example `playperks-db`.
-4. Open that D1 database's console and run the SQL from `schema.sql` (this folder's file).
-5. In the Pages project, open **Settings → Functions → D1 database bindings** and add a binding:
-   - Variable name: `DB`
-   - D1 database: your newly created `playperks-db`
-6. In **Settings → Variables and Secrets**, add these as **Secrets**, not public vars:
-   - `ADMIN_PASSWORD`: a unique password with at least 16 characters. Do not reuse your GitHub or email password.
-   - `SESSION_SECRET`: a separate random secret, at least 32 characters. Generate it locally with a password manager or a trusted cryptographic generator. Never commit either secret to GitHub.
-7. Save and trigger a new deployment. If this is an existing Pages project, changing its root directory changes what that project serves. To keep the existing water-bottle demo live, create a separate Pages project instead.
-8. In **Custom domains**, attach the domain or a subdomain you want to use. If your domain is already attached to the old Pages project, do not remove or repoint it until you decide which site should be live there.
+活动时间、适用地区、参与资格和优惠规则以对应活动页面为准。部分活动链接可能来自推广合作，网站会在页面底部提示。上线前请测试管理员登录、添加、编辑、下架、删除与外链跳转。
 
-Cloudflare Git integration automatically builds and deploys changes pushed to the connected branch. Because the root directory is `games-cps`, commits to the new folder become this site's deployment source.
-
-## Admin usage
-
-1. Open the deployed site and choose **管理员登录 / Admin login**.
-2. Enter the `ADMIN_PASSWORD` secret.
-3. Fill in Chinese and English names and summaries, category, offer headline, and the actual CPS promotion URL. Add gameplay notes, terms and an optional HTTPS cover image URL if available.
-4. Select **公开显示 / Publicly visible** to publish. Uncheck it to take the game off the public site without deleting its data.
-5. Use **Edit** to update an existing listing or **Delete** to permanently remove it.
-
-Changes are stored in D1 and appear without a site rebuild. Keep promotional claims accurate and explain relevant eligibility, expiry dates, region limits and purchase conditions. The public site includes a disclosure that some outbound links may be affiliate links.
-
-## Security and limitations
-
-- Admin sessions are signed using `SESSION_SECRET`, stored in an HttpOnly, SameSite=Strict cookie and expire after eight hours.
-- Admin routes require the session cookie. Keep Cloudflare secrets private.
-- This first version uses a single admin password, not multiple user accounts or role-based permissions. Use a long unique password and do not share it.
-- D1 must be bound as `DB`; without it the API intentionally returns a configuration error.
-- The site does not invent sample offers or CPS URLs. Add verified campaign data from your affiliate program.
-- Test login, add/edit, unpublish/delete and outbound links in the Pages preview deployment before switching your main domain.
+本项目使用 Cloudflare Pages Functions 与 D1，不需要 npm 安装或构建。
