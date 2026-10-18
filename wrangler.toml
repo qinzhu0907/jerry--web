@@ -1,0 +1,5 @@
+name = "jerry-web-demo"
+compatibility_date = "2026-10-18"
+
+[vars]
+APP_NAME = "Jerry Web Demo"
