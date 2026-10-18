@@ -1,40 +1,12 @@
 import { verifySession, json, readJson, validWebUrl } from "../_lib/auth.js";
-const FIELDS=["nameZh","nameEn","category","platform","discount","summaryZh","summaryEn","gameplayZh","gameplayEn","terms","imageUrl","promoUrl","featured","active"];
-function clean(body){const out={};for(const key of FIELDS)out[key]=body[key]??(key==="featured"||key==="active"?false:"");for(const key of ["nameZh","nameEn","category","discount","summaryZh","summaryEn"])out[key]=String(out[key]).trim();for(const key of ["platform","gameplayZh","gameplayEn","terms","imageUrl","promoUrl"])out[key]=String(out[key]||"").trim();out.nameEn="";out.summaryEn="";out.gameplayEn="";out.featured=!!out.featured;out.active=!!out.active;return out;}
-function validate(g){if(!g.nameZh||!g.category||!g.discount||!g.summaryZh)return "请填写游戏名称、分类、福利标题和游戏简介";if(g.nameZh.length>100||g.category.length>60||g.discount.length>120||g.summaryZh.length>500||g.gameplayZh.length>2000||g.terms.length>1500||g.platform.length>100)return "部分内容超出允许长度";if(!validWebUrl(g.promoUrl)||!validWebUrl(g.imageUrl,true))return "链接必须使用 http 或 https";return "";}
-function row(r){return {...r,featured:!!r.featured,active:!!r.active};}
-async function isAdmin(request,env){return await verifySession(request,env.SESSION_SECRET);}
-export async function onRequest({request,env}){
- if(!env.DB)return json({error:"数据库尚未配置"},503);
- const method=request.method;
- if(method==="GET"){
-  const admin=new URL(request.url).searchParams.get("admin")==="1"&&await isAdmin(request,env);
-  const result=admin?await env.DB.prepare("SELECT * FROM games ORDER BY featured DESC, updated_at DESC").all():await env.DB.prepare("SELECT * FROM games WHERE active=1 ORDER BY featured DESC, updated_at DESC").all();
-  return json({games:(result.results||[]).map(row)});
- }
- if(!await isAdmin(request,env))return json({error:"请先登录管理员账号"},401);
- try{
-  const body=await readJson(request);
-  if(method==="POST"){
-   const g=clean(body),error=validate(g);if(error)return json({error},400);
-   const id=crypto.randomUUID(),now=new Date().toISOString();
-   await env.DB.prepare("INSERT INTO games (id,nameZh,nameEn,category,platform,discount,summaryZh,summaryEn,gameplayZh,gameplayEn,terms,imageUrl,promoUrl,featured,active,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id,g.nameZh,"",g.category,g.platform,g.discount,g.summaryZh,"",g.gameplayZh,"",g.terms,g.imageUrl,g.promoUrl,g.featured?1:0,g.active?1:0,now,now).run();
-   return json({ok:true,id},201);
-  }
-  if(method==="PUT"){
-   const id=String(body.id||"");if(!id)return json({error:"缺少游戏编号"},400);
-   const g=clean(body),error=validate(g);if(error)return json({error},400);
-   const now=new Date().toISOString();
-   const result=await env.DB.prepare("UPDATE games SET nameZh=?,nameEn='',category=?,platform=?,discount=?,summaryZh=?,summaryEn='',gameplayZh=?,gameplayEn='',terms=?,imageUrl=?,promoUrl=?,featured=?,active=?,updated_at=? WHERE id=?").bind(g.nameZh,g.category,g.platform,g.discount,g.summaryZh,g.gameplayZh,g.terms,g.imageUrl,g.promoUrl,g.featured?1:0,g.active?1:0,now,id).run();
-   if(!result.meta?.changes)return json({error:"未找到这条游戏内容"},404);
-   return json({ok:true,id});
-  }
-  if(method==="DELETE"){
-   const id=String(body.id||"");if(!id)return json({error:"缺少游戏编号"},400);
-   const result=await env.DB.prepare("DELETE FROM games WHERE id=?").bind(id).run();
-   if(!result.meta?.changes)return json({error:"未找到这条游戏内容"},404);
-   return json({ok:true,id});
-  }
-  return json({error:"不支持的请求方式"},405,{Allow:"GET, POST, PUT, DELETE"});
- }catch(error){return json({error:error.message==="Request too large"?"请求内容过大":"请求无效或数据库操作失败"},400);}
-}
+const KEYS=["nameZh","category","platform","discount","summaryZh","gameplayZh","terms","imageUrl","iconUrl","galleryUrls","promoUrl"];
+function clean(b){const g={};for(const k of KEYS)g[k]=String(b[k]??"").trim();g.featured=!!b.featured;g.active=!!b.active;return g}
+function validate(g){if(!g.nameZh||!g.category||!g.discount||!g.summaryZh)return "请填写游戏名称、分类、卡片标签和简介";if(g.nameZh.length>100||g.category.length>60||g.discount.length>120||g.summaryZh.length>500||g.gameplayZh.length>2000||g.terms.length>1500||g.platform.length>100||g.galleryUrls.length>3000)return "部分内容超出允许长度";if(!validWebUrl(g.promoUrl)||!validWebUrl(g.imageUrl,true)||!validWebUrl(g.iconUrl,true))return "链接必须使用 http 或 https";const gallery=g.galleryUrls.split(/\n+/).map(x=>x.trim()).filter(Boolean);if(gallery.length>6||gallery.some(x=>!validWebUrl(x)))return "详情图片最多填写 6 个有效的 http/https 链接";return ""}
+const asRow=r=>({...r,featured:!!r.featured,active:!!r.active});
+export async function onRequest({request,env}){if(!env.DB)return json({error:"数据库尚未配置"},503);const method=request.method;
+if(method==="GET"){const admin=new URL(request.url).searchParams.get("admin")==="1"&&await verifySession(request,env.SESSION_SECRET);const result=admin?await env.DB.prepare("SELECT * FROM games ORDER BY featured DESC, updated_at DESC").all():await env.DB.prepare("SELECT * FROM games WHERE active=1 ORDER BY featured DESC, updated_at DESC").all();return json({games:(result.results||[]).map(asRow)})}
+if(!await verifySession(request,env.SESSION_SECRET))return json({error:"请先登录管理员账号"},401);
+try{const b=await readJson(request);if(method==="POST"){const g=clean(b),err=validate(g);if(err)return json({error:err},400);const id=crypto.randomUUID(),now=new Date().toISOString();await env.DB.prepare("INSERT INTO games (id,nameZh,nameEn,category,platform,discount,summaryZh,summaryEn,gameplayZh,gameplayEn,terms,imageUrl,iconUrl,galleryUrls,promoUrl,featured,active,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id,g.nameZh,"",g.category,g.platform,g.discount,g.summaryZh,"",g.gameplayZh,"",g.terms,g.imageUrl,g.iconUrl,g.galleryUrls,g.promoUrl,g.featured?1:0,g.active?1:0,now,now).run();return json({ok:true,id},201)}
+if(method==="PUT"){const id=String(b.id||"");if(!id)return json({error:"缺少游戏编号"},400);const g=clean(b),err=validate(g);if(err)return json({error:err},400);const now=new Date().toISOString();const result=await env.DB.prepare("UPDATE games SET nameZh=?,nameEn='',category=?,platform=?,discount=?,summaryZh=?,summaryEn='',gameplayZh=?,gameplayEn='',terms=?,imageUrl=?,iconUrl=?,galleryUrls=?,promoUrl=?,featured=?,active=?,updated_at=? WHERE id=?").bind(g.nameZh,g.category,g.platform,g.discount,g.summaryZh,g.gameplayZh,g.terms,g.imageUrl,g.iconUrl,g.galleryUrls,g.promoUrl,g.featured?1:0,g.active?1:0,now,id).run();if(!result.meta?.changes)return json({error:"未找到这条游戏内容"},404);return json({ok:true,id})}
+if(method==="DELETE"){const id=String(b.id||"");if(!id)return json({error:"缺少游戏编号"},400);const result=await env.DB.prepare("DELETE FROM games WHERE id=?").bind(id).run();if(!result.meta?.changes)return json({error:"未找到这条游戏内容"},404);return json({ok:true,id})}
+return json({error:"不支持的请求方式"},405,{Allow:"GET, POST, PUT, DELETE"})}catch(e){return json({error:"请求无效或数据库操作失败"},400)}}
