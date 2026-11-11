@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Jerry 的个人站点：写代码、做工具，顺手把过程记下来。">
+<meta name="theme-color" content="#fbfaf7">
+<title>Jerry — 写点东西</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>
+  // 先定主题，避免深色调下首屏闪一下白
+  try {
+    var t = localStorage.getItem('jerry-theme');
+    document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- 背景场：底层网格 / 鼠标探照灯 / 漂移光晕 / 磁吸点阵 -->
+<div class="field" aria-hidden="true">
+  <div class="field-grid"></div>
+  <div class="field-spot"></div>
+  <div class="field-glow"></div>
+  <canvas class="field-dots" id="dots"></canvas>
+  <div class="field-cross" id="cross"></div>
+</div>
+<div class="read-progress" id="read-progress" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top">Jerry<span class="brand-dot">.</span></a>
+  <nav class="nav" aria-label="主导航">
+    <a href="#writing">文章</a>
+    <a href="#scraps">碎片</a>
+    <a href="#about">关于</a>
+  </nav>
+  <div class="tools">
+    <div class="search-wrap" id="search-wrap">
+      <label class="sr-only" for="search">搜索文章</label>
+      <input id="search" type="search" placeholder="搜标题、正文、标签" autocomplete="off" spellcheck="false" tabindex="-1" aria-hidden="true">
+      <kbd>/</kbd>
+    </div>
+    <button class="tool-btn" id="search-toggle" type="button" aria-label="打开搜索" title="搜索 (/)">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path></svg>
+    </button>
+    <button class="tool-btn" id="theme-toggle" type="button" aria-label="切换深浅色" title="切换深浅色">
+      <svg class="i-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="strip wrap" aria-label="时间与进度">
+    <span class="strip-label">2026 · 第 <b id="week">46</b> 周</span>
+    <div class="strip-bar"><i id="year-bar"></i></div>
+    <span class="strip-pct" id="year-pct">86%</span>
+    <span class="strip-clock" id="clock">--:--:--</span>
+  </section>
+
+  <section class="hero wrap">
+    <div class="hero-left">
+      <p class="hero-tag">第二版 / 2026.11.10 重写</p>
+      <h1 class="wordmark">Jerry<span>.</span></h1>
+      <p class="hero-line">写代码，做工具，顺手把过程记下来。<br>想不明白的那部分也留着。</p>
+    </div>
+    <div class="hero-right">
+      <dl class="spec">
+        <div><dt>现在</dt><dd>2026 年 11 月 · UTC+8</dd></div>
+        <div><dt>在做</dt><dd>把这个站推倒重来</dd></div>
+        <div><dt>写</dt><dd>代码、工具，和没想明白的事</dd></div>
+        <div><dt>联系</dt><dd><a href="mailto:yuanhaojerry@gmail.com">yuanhaojerry@gmail.com</a></dd></div>
+      </dl>
+      <p class="hero-note">上一版是套模板：假日期、示例文章、外链图片，还有一句「让生活慢慢展开」。全删了，重写。</p>
+    </div>
+  </section>
+
+  <section class="writing wrap" id="writing">
+    <div class="sec-head">
+      <h2>写过的东西</h2>
+      <span class="sec-count" id="sec-count"></span>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="filters" role="group" aria-label="按标签筛选"></div>
+      <span class="toolbar-hint">点标题展开全文 · 链接可直接分享</span>
+    </div>
+    <div class="post-list" id="post-list"></div>
+    <p class="empty" id="empty" hidden></p>
+  </section>
+
+  <section class="scraps wrap" id="scraps">
+    <div class="sec-head">
+      <h2>碎片</h2>
+      <span class="sec-count">没长成文章的部分</span>
+    </div>
+    <p class="scraps-intro">改这个站时随手记的。鼠标停在格子上，后面那层网格会跟过去。</p>
+    <div class="scrap-grid" id="scrap-grid"></div>
+  </section>
+
+  <section class="about wrap" id="about">
+    <div class="sec-head"><h2>关于这个站</h2></div>
+    <div class="about-grid">
+      <p>一个 HTML、一个 CSS、一个 JS。没有框架，没有构建，没有外部字体和图片，断网也能打开。</p>
+      <p>文章在 <code>app.js</code> 的 <code>posts</code> 里，加一篇就往数组里加一项；碎片在 <code>scraps</code> 里，同理。日期是我自己填的，别当成发布系统。</p>
+      <p>背景那层网格用 <code>radial-gradient</code> 当遮罩跟着鼠标走；交点上的小点用 canvas 画，靠近鼠标会被推开一点，松开就慢慢弹回去。开了「减少动态效果」或者屏幕太窄，它会安静下来。</p>
+      <p>如果你也觉得某一版太像模板 —— 删掉重写，通常比修修补补快。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>© <span id="year">2026</span> Jerry · 手写，无构建</span>
+  <span class="footer-links"><a href="https://github.com/qinzhu0907/jerry--web" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#top">回到顶部 ↑</a></span>
+</footer>
+
+<div class="hud" id="hud" aria-hidden="true"><span id="hud-pos">X 0000 · Y 0000</span><i></i><span id="hud-state">READY</span></div>
+
+<script src="app.js"></script>
+</body>
+</html>
