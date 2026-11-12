@@ -234,7 +234,7 @@ if (scraps.length) {
     </button>
   `).join('');
 } else {
-  grid.innerHTML = '<div class="scrap-empty">碎片的位置也留好了，往 app.js 的 scraps 里加一条就有。</div>';
+  grid.innerHTML = '<div class="scrap-empty">碎片处出现混乱，数据丢失啦，喵~</div>';
 }
 
 /* ---------- 背景场：探照灯 + 磁吸点阵 ---------- */
