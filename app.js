@@ -105,7 +105,7 @@ function render() {
 
   const count = $('#sec-count');
   count.textContent = posts.length === 0
-    ? '位置已留好 · 等第一篇'
+    ? '随着风前行……'
     : (term || activeTag !== '全部'
       ? `${pad2(visible.length)} / ${pad2(posts.length)} 篇`
       : `${pad2(posts.length)} 篇 · 最后更新 ${posts[0].date}`);
@@ -114,7 +114,7 @@ function render() {
   empty.hidden = visible.length > 0;
   if (!visible.length) {
     empty.textContent = posts.length === 0
-      ? '位置留好了。往 app.js 的 posts 里加第一篇，它就会出现在这里。'
+      ? '暂无更新'
       : `「${search.value.trim()}」没搜到。这里一共 ${posts.length} 篇，清空关键词或者换个标签看看。`;
   }
   syncHash(visible);
