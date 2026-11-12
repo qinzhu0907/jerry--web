@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="青竹的个人站点。随风而起，因风而动。">
+<meta name="theme-color" content="#fbfaf7">
+<title>青竹 · Qingzhu</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>
+  // 先定主题，避免深色调下首屏闪一下白
+  try {
+    var t = localStorage.getItem('jerry-theme');
+    document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- 背景场：底层网格 / 鼠标探照灯 / 漂移光晕 / 磁吸点阵 -->
+<div class="field" aria-hidden="true">
+  <div class="field-grid"></div>
+  <div class="field-spot"></div>
+  <div class="field-glow"></div>
+  <canvas class="field-dots" id="dots"></canvas>
+  <div class="field-cross" id="cross"></div>
+</div>
+<div class="read-progress" id="read-progress" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top">青竹<span class="brand-dot">.</span></a>
+  <nav class="nav" aria-label="主导航">
+    <a href="#writing">文章</a>
+    <a href="#scraps">碎片</a>
+    <a href="#about">关于</a>
+  </nav>
+  <div class="tools">
+    <div class="search-wrap" id="search-wrap">
+      <label class="sr-only" for="search">搜索文章</label>
+      <input id="search" type="search" placeholder="搜标题、正文、标签" autocomplete="off" spellcheck="false" tabindex="-1" aria-hidden="true">
+      <kbd>/</kbd>
+    </div>
+    <button class="tool-btn" id="search-toggle" type="button" aria-label="打开搜索" title="搜索 (/)">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path></svg>
+    </button>
+    <button class="tool-btn" id="theme-toggle" type="button" aria-label="切换深浅色" title="切换深浅色">
+      <svg class="i-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"></path></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="strip wrap" aria-label="时间与进度">
+    <span class="strip-label">2026 · 第 <b id="week">46</b> 周</span>
+    <div class="strip-bar"><i id="year-bar"></i></div>
+    <span class="strip-pct" id="year-pct">86%</span>
+    <span class="strip-clock" id="clock">--:--:--</span>
+  </section>
+
+  <section class="hero wrap">
+    <div class="hero-left">
+      <p class="hero-tag">个人站 · 二〇二六</p>
+      <h1 class="wordmark"><span class="hz">青</span><span class="hz is-accent">竹</span><em class="wm-en">Qingzhu</em></h1>
+      <p class="signature" id="signature" lang="zh-CN">随风而起，因风而动</p>
+    </div>
+    <div class="hero-right">
+      <dl class="spec">
+        <div><dt>现在</dt><dd>二〇二六年十一月 · UTC+8</dd></div>
+        <div><dt>联系</dt><dd><a href="mailto:yuanhaojerry@gmail.com">yuanhaojerry@gmail.com</a></dd></div>
+      </dl>
+      <!-- 社交图标：把 href="#" 换成你自己的主页地址即可 -->
+      <div class="socials">
+        <a href="https://github.com/qinzhu0907" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18a11 11 0 0 1 5.75 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.76.11 3.05.73.8 1.18 1.83 1.18 3.08 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"></path></svg>
+        </a>
+        <a href="#" data-placeholder aria-label="X（推特）" title="X — 链接待填">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M18.9 2.5h3.4l-7.4 8.5 8.7 11.5h-6.8l-5.3-7-6.1 7H1.9l7.9-9.1L1.5 2.5h7l4.8 6.4 5.6-6.4Zm-1.2 18h1.9L7.4 4.4H5.4l12.3 16.1Z"></path></svg>
+        </a>
+        <a href="#" data-placeholder aria-label="Bilibili" title="Bilibili — 链接待填">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.4 4.6 5.2 7.5M16.6 4.6l2.2 2.9"></path><rect x="2.5" y="7.5" width="19" height="12.5" rx="3"></rect><path d="M8.5 12.2v2.6M15.5 12.2v2.6"></path></svg>
+        </a>
+        <a href="mailto:yuanhaojerry@gmail.com" aria-label="邮箱" title="yuanhaojerry@gmail.com">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="writing wrap" id="writing">
+    <div class="sec-head">
+      <h2>写过的东西</h2>
+      <span class="sec-count" id="sec-count"></span>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="filters" role="group" aria-label="按标签筛选"></div>
+      <span class="toolbar-hint">点标题展开全文 · 链接可直接分享</span>
+    </div>
+    <div class="post-list" id="post-list"></div>
+    <p class="empty" id="empty" hidden></p>
+  </section>
+
+  <section class="scraps wrap" id="scraps">
+    <div class="sec-head">
+      <h2>碎片</h2>
+      <span class="sec-count">没长成文章的部分</span>
+    </div>
+    <div class="scrap-grid" id="scrap-grid"></div>
+  </section>
+
+  <section class="about wrap" id="about">
+    <div class="sec-head"><h2>关于这个站</h2></div>
+    <div class="about-grid">
+      <p>这里大部分位置还空着，等我慢慢填。</p>
+      <p>想加一篇文字，就往 <code>app.js</code> 里的 <code>posts</code> 添一项；碎片在 <code>scraps</code>，同理。图标的链接在 <code>index.html</code> 里，改成自己的地址就行。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>© <span id="year">2026</span> 青竹 · 手写</span>
+  <span class="footer-links"><a href="https://github.com/qinzhu0907" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#top">回到顶部 ↑</a></span>
+</footer>
+
+<div class="hud" id="hud" aria-hidden="true"><span id="hud-pos">X 0000 · Y 0000</span><i></i><span id="hud-state">READY</span></div>
+
+<script src="app.js"></script>
+</body>
+</html>
