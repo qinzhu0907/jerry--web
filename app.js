@@ -269,14 +269,9 @@ function resize() {
   }
 }
 
-/* 签名：每个字拆开，跟着鼠标和一阵慢风轻轻飘 */
+/* 签名：整体跟着鼠标和一阵慢风轻轻飘（连笔字不拆开，拆开就断了） */
 const sig = $('#signature');
-let sigSpans = [], sigState = [];
-if (sig) {
-  sig.innerHTML = [...sig.textContent].map(c => `<span>${esc(c)}</span>`).join('');
-  sigSpans = $$('.signature span');
-  sigState = sigSpans.map(() => ({ x: 0, y: 0 }));
-}
+let sigState = { x: 0, y: 0 };
 
 let fieldRunning = false;
 function frame(now) {
@@ -315,20 +310,16 @@ function frame(now) {
   ctx.fillStyle = `rgba(${r},${g},${b},.7)`;
   ctx.fill();
 
-  if (sigSpans.length) {
+  if (sig) {
     const t = now / 1000;
-    const rects = sigSpans.map(s => s.getBoundingClientRect());
-    sigSpans.forEach((s, i) => {
-      const rect = rects[i];
-      const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
-      const dx = (cx - smooth.x) / W, dy = (cy - smooth.y) / H;
-      const tx = dx * 16 + Math.sin(t * 1.1 + i * .7) * 2.4;
-      const ty = dy * 11 + Math.sin(t * .9 + i * .9) * 1.8;
-      const st = sigState[i];
-      st.x += (tx - st.x) * .07;
-      st.y += (ty - st.y) * .07;
-      s.style.transform = `translate(${st.x.toFixed(2)}px, ${st.y.toFixed(2)}px) rotate(${(st.x * .35).toFixed(2)}deg)`;
-    });
+    const rect = sig.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+    const dx = (cx - smooth.x) / W, dy = (cy - smooth.y) / H;
+    const tx = dx * 18 + Math.sin(t * 1.1) * 3;
+    const ty = dy * 12 + Math.sin(t * .9 + 1.3) * 2.2;
+    sigState.x += (tx - sigState.x) * .06;
+    sigState.y += (ty - sigState.y) * .06;
+    sig.style.transform = `translate(${sigState.x.toFixed(2)}px, ${sigState.y.toFixed(2)}px) rotate(${(sigState.x * .25).toFixed(2)}deg)`;
   }
   requestAnimationFrame(frame);
 }
